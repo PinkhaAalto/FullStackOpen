@@ -56,12 +56,14 @@ const App = () => {
       <div>
         <Header title={"Statistics"}/>
       <table>
-        <StatisticsLine title={"good"} total={good}/>
-        <StatisticsLine title={"neutral"} total={neutral}/>
-        <StatisticsLine title={"bad"} total={bad}/>
-        <StatisticsLine title={"all"} total={all}/>
-        <StatisticsLine title={"average"} total={average}/>
-        <StatisticsLine title={"positive"} total={posAvg*100} unit={"%"}/> 
+        <tbody>
+          <StatisticsLine title={"good"} total={good}/>
+          <StatisticsLine title={"neutral"} total={neutral}/>
+          <StatisticsLine title={"bad"} total={bad}/>
+          <StatisticsLine title={"all"} total={all}/>
+          <StatisticsLine title={"average"} total={average}/>
+          <StatisticsLine title={"positive"} total={posAvg*100} unit={"%"}/> 
+        </tbody>
       </table>
       </div>
     )
