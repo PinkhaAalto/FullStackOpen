@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 app.use(express.json())
+app.use(express.static('tiny'))
 const morgan = require('morgan')
 
 const cors = require('cors')
@@ -12,59 +13,54 @@ app.use(express.static('dist'))
 morgan.token('body', (request) => JSON.stringify(request.body))
 app.use(morgan('tiny'))
 
-let data = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
+const Person = require('./models/person.js');
+const {errorHandler, unknownEndpoint} = require('./middleware/errorHandler.js')
+const person = require('./models/person.js')
+app.use(errorHandler)
+app.use(unknownEndpoint)
 
 
-
-app.get('/api/persons', (request, response) => {
-  response.json(data)
+app.get('/api/persons', (request, response, next) => {
+  Person.find({})
+    .then(res => {
+      response.json(res)
+    }) 
+    .catch(error => next(error))
 })
 
-app.get('/api/info', (request, response) => {
+app.get('/api/info', (request, response, next) => {
   const timestamp = new Date()
-  response.send(`<p>Phonebook has info for ${data.length} persons</p>
-  <p>${timestamp}</p>`)
+  Person.find({})
+    .then (res => {
+      response.send(`<p>Phonebook has info for ${res.length()}</p>
+      <p>${timestamp}</p>`)
+    })
+    .catch(error => next(error))
 })
 
-app.get(`/api/persons/:id`, (request, response) =>{
+app.get(`/api/persons/:id`, (request, response, next) =>{
   const id = request.params.id
-  const contact = data.find(contact => contact.id == id); 
-  
-  if (contact) {
-    response.json(contact)
-  } else {
-    response.status(404).end()
-  }
+  Person.findById(id)
+    .then (contact => {
+      if(contact) {
+        response.json(contact)
+      } else{
+        response.status(404).end()
+      }
+    }) 
+    .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  data = data.filter(contact => contact.id !== id)
-  response.status(204).end()
+app.delete('/api/persons/:id', (request, response, next) => {
+  const id = request.params.id
+  Person.findByIdAndRemove(id)
+    .then(() => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
-app.post('/api/persons', morgan(':method :url :status :res[content] - :response-time ms :body') ,(request, response) => {
+app.post('/api/persons', morgan(':method :url :status :res[content] - :response-time ms :body') ,(request, response, next) => {
   const body = request.body
 
   if (!body.name || !body.number){
@@ -73,16 +69,27 @@ app.post('/api/persons', morgan(':method :url :status :res[content] - :response-
     })
   }
 
-  const contact = {
-    id: Math.floor(Math.random()*10000000000000),
+  const contact = new Person ({
     name: body.name,
     number: body.number
-  }
+  })
 
-  data.concat(contact)
+  contact.save()
+    .then(res =>  {
+      response.json(res)
+    })
+    .catch(error => error(next))
+})
 
-  response.status(204).end();
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+  const name = body.name
+  const number = body.number
+  const id = params.id
 
+  const person = Person.findByIdAndUpdate(id, {})
+    .then (res)
+  
 })
 
 const PORT = process.env.PORT || 3001
