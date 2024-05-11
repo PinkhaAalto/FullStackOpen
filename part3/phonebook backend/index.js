@@ -87,8 +87,11 @@ app.put('/api/persons/:id', (request, response, next) => {
   const number = body.number
   const id = params.id
 
-  const person = Person.findByIdAndUpdate(id, {})
-    .then (res)
+  const person = Person.findByIdAndUpdate(id, {number, name})
+    .then(res => {
+      response.json(res)
+    })
+    .catch(error => next(error))
   
 })
 
