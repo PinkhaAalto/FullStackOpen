@@ -13,8 +13,6 @@ const url =
 
 mongoose.set('strictQuery',false)
 
-console.log(url)
-
 mongoose.connect(url)
 
 const personSchema = new mongoose.Schema({

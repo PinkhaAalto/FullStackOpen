@@ -1,4 +1,5 @@
 const express = require('express')
+require('dotenv').config()
 const app = express()
 app.use(express.json())
 app.use(express.static('tiny'))
@@ -15,7 +16,6 @@ app.use(morgan('tiny'))
 
 const Person = require('./models/person.js');
 const {errorHandler, unknownEndpoint} = require('./middleware/errorHandler.js')
-const person = require('./models/person.js')
 app.use(errorHandler)
 app.use(unknownEndpoint)
 
@@ -69,7 +69,7 @@ app.post('/api/persons', morgan(':method :url :status :res[content] - :response-
     })
   }
 
-  const contact = new Person ({
+  const contact = new Person({
     name: body.name,
     number: body.number
   })
