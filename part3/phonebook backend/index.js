@@ -19,7 +19,6 @@ const Person = require('./models/person.js');
 
 
 app.get('/api/persons', (request, response, next) => {
-  console.log("called this");
   Person.find({})
     .then(res => {
       response.json(res)
@@ -77,14 +76,14 @@ app.post('/api/persons', morgan(':method :url :status :res[content] - :response-
     .then(res =>  {
       response.json(res)
     })
-    .catch(error => error(next))
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
   const name = body.name
   const number = body.number
-  const id = params.id
+  const id = request.params.id
 
   const person = Person.findByIdAndUpdate(id, {number, name})
     .then(res => {
