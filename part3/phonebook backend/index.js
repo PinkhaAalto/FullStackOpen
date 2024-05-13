@@ -15,12 +15,11 @@ morgan.token('body', (request) => JSON.stringify(request.body))
 app.use(morgan('tiny'))
 
 const Person = require('./models/person.js');
-const {errorHandler, unknownEndpoint} = require('./middleware/errorHandler.js')
-app.use(errorHandler)
-app.use(unknownEndpoint)
+
 
 
 app.get('/api/persons', (request, response, next) => {
+  console.log("called this");
   Person.find({})
     .then(res => {
       response.json(res)
@@ -94,6 +93,10 @@ app.put('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
   
 })
+
+const {errorHandler, unknownEndpoint} = require('./middleware/errorHandler.js')
+app.use(unknownEndpoint)
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT)

@@ -8,7 +8,7 @@
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:ui": "rm -rf dist && cd ../../part2/phonebook && npm run build && cp -r dist ../../part3/'phonebook backend'",
-    "deploy:full": "npm run-script build:ui && git add . && git commit -m uibuild && gitpush"
+    "deploy:full": "npm run-script build:ui && git add . && git commit -m uibuild && git push"
   },
   "author": "",
   "license": "ISC",
