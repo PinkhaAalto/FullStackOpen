@@ -16,10 +16,8 @@ const getAll = async () => {
     return request.then(response => response.data)
   }
 
-  const update = async(number, id) => {
-    const request = axios.patch(`${url}/${id}`, {
-      number: number 
-    })
+  const update = async(person, id) => {
+    const request = axios.put(`${url}/${id}`, person)
     return request.then(response => response.data)
   }
 

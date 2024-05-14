@@ -112,21 +112,18 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
-    if (newNumber.length===0){
-      alert(`Add a number to ${newName} in order to save.`)
-      return
-    }
-
     const newPerson = {
       name: newName,
       number: newNumber
     }
+
     let flag = false
-      persons.forEach(person => {
+    persons.forEach(person => {
+        console.log(person._id)
         if(person.name === newName){
           if(window.confirm(`${newName} already exists in the phonebook, replace the old number with the new one?`)){
             
-            update(newNumber, person.id)
+            update(newPerson, person._id)
               .then(response => {
                 console.log(response)
                 const index = persons.findIndex(person => person.name === newName)
@@ -163,7 +160,14 @@ const App = () => {
         setTimeout(() =>{
           setMessage(null)
         }, 5000)
-        });
+        })
+      .catch(error => {
+        console.log(error)
+        setError(`Encountered an error: ${error.response.data.error} Correct format: [Name] [Number({2,3} - {6}])`)
+        setTimeout(() => {
+          setError(null)
+        }, 5000)
+      })
       }
     }
 
