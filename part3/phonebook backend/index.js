@@ -14,7 +14,7 @@ app.use(express.static('dist'))
 morgan.token('body', (request) => JSON.stringify(request.body))
 app.use(morgan('tiny'))
 
-const Person = require('./models/person.js');
+const Person = require('./models/person.js')
 
 
 
@@ -22,7 +22,7 @@ app.get('/api/persons', (request, response, next) => {
   Person.find({})
     .then(res => {
       response.json(res)
-    }) 
+    })
     .catch(error => next(error))
 })
 
@@ -36,7 +36,7 @@ app.get('/api/info', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.get(`/api/persons/:id`, (request, response, next) =>{
+app.get('/api/persons/:id', (request, response, next) => {
   const id = request.params.id
   Person.findById(id)
     .then (contact => {
@@ -45,7 +45,7 @@ app.get(`/api/persons/:id`, (request, response, next) =>{
       } else{
         response.status(404).end()
       }
-    }) 
+    })
     .catch(error => next(error))
 })
 
@@ -85,15 +85,15 @@ app.put('/api/persons/:id', (request, response, next) => {
   const number = body.number
   const id = request.params.id
 
-  const person = Person.findByIdAndUpdate(id, {number, name})
+  Person.findByIdAndUpdate(id, { number, name })
     .then(res => {
       response.json(res)
     })
     .catch(error => next(error))
-  
+
 })
 
-const {errorHandler, unknownEndpoint} = require('./middleware/errorHandler.js')
+const { errorHandler, unknownEndpoint } = require('./middleware/errorHandler.js')
 app.use(unknownEndpoint)
 app.use(errorHandler)
 
